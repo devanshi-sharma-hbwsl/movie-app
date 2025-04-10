@@ -33,16 +33,6 @@ class MainActivity : ComponentActivity() {
 //                                    )
 //                                }
 
-//                var searchText by remember { mutableStateOf("") }
-//
-//                Surface () {
-//                    MovieScreen (
-//                        onSearch = { text ->
-//                            searchText = text
-//                        }
-//                    )
-//                }
-
                 val repo = FetchMovieRepoImpl()
                 val factory = MovieViewModelFactory(repo)
                 val viewModel: MovieViewModel = viewModel(factory = factory)
@@ -54,9 +44,8 @@ class MainActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     MovieScreen(
                         movieList = movieList,
-                        onSearch = { query ->
-                            viewModel.onSearch(query)
-                        }
+                        onSearch = { viewModel.onSearch(it) },
+                        onToggleFavourite = { viewModel.toggleFavourite(it) }
                     )
                 }
             }

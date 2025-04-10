@@ -31,9 +31,10 @@ class MovieViewModel(
         viewModelScope.launch {
             try {
                 val movies = fetchMovieRepo.getMovies()
+                    .map { it.copy(isFavourite = it.isFavourite) }
                 _movieList.value = movies
             } catch (e: Exception) {
-                Log.e("error movieviewmodel", "network error", e)
+                Log.e("MovieViewModel", "network error", e)
                 _movieList.value = emptyList()
             }
         }
@@ -43,12 +44,24 @@ class MovieViewModel(
         _searchQuery.value = query
     }
 
-    val filteredMovies = movieList
-        .combine (searchQuery) { list, query ->
+    fun toggleFavourite(target: Movie) {
+        _movieList.value = _movieList.value.map { movie ->
+            if (movie.id == target.id) {
+                movie.copy(isFavourite = !movie.isFavourite)
+            } else {
+                movie
+            }
+        }
+    }
+
+    val filteredMovies: StateFlow<List<Movie>> = movieList
+        .combine(searchQuery) { list, query ->
             if (query.isBlank()) list
             else list.filter { it.title.contains(query, ignoreCase = true) }
         }
-        .stateIn(viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            emptyList())
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = emptyList()
+        )
 }

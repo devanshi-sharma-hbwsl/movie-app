@@ -6,5 +6,6 @@ data class Movie(
     val number: String,
     val originalAirDate: String,
     val title: String,
-    val writers: String
+    val writers: String,
+    var isFavourite: Boolean = false
 )
