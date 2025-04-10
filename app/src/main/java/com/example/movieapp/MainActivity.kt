@@ -13,6 +13,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.*
 import androidx.navigation.navArgument
 import com.example.movieapp.featureA.data.network.repository.FetchMovieRepoImpl
+import com.example.movieapp.featureA.presentation.ui.FavouritesScreen
 import com.example.movieapp.featureA.presentation.ui.MovieDetailScreen
 import com.example.movieapp.featureA.presentation.ui.MovieScreen
 import com.example.movieapp.featureA.presentation.viewmodel.MovieViewModel
@@ -24,8 +25,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val repo    = FetchMovieRepoImpl()
-        val factory = MovieViewModelFactory(repo)
+        val repo     = FetchMovieRepoImpl()
+        val factory  = MovieViewModelFactory(repo)
         val viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
 
         setContent {
@@ -48,6 +49,9 @@ class MainActivity : ComponentActivity() {
                                 onToggleFavourite = { viewModel.toggleFavourite(it) },
                                 onMovieClick      = { m ->
                                     navController.navigate("movieDetail/${m.id}")
+                                },
+                                onFavouritesClick = {
+                                    navController.navigate("favourites")
                                 }
                             )
                         }
@@ -63,6 +67,20 @@ class MainActivity : ComponentActivity() {
                                 movieId   = movieId,
                                 viewModel = viewModel,
                                 onBack    = { navController.popBackStack() }
+                            )
+                        }
+
+                        composable("favourites") {
+                            val allMovies by viewModel.movieList.collectAsState()
+                            val favourites = allMovies.filter { it.isFavourite }
+
+                            FavouritesScreen(
+                                favouriteList     = favourites,
+                                onToggleFavourite = { viewModel.toggleFavourite(it) },
+                                onMovieClick      = { m ->
+                                    navController.navigate("movieDetail/${m.id}")
+                                },
+                                onBack            = { navController.popBackStack() }
                             )
                         }
                     }
