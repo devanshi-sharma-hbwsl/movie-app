@@ -8,7 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -17,11 +17,11 @@ import com.example.movieapp.featureA.domain.model.Movie
 @Composable
 fun MovieScreen(
     movieList: List<Movie>,
+    searchQuery: String,
     onSearch: (String) -> Unit,
-    onToggleFavourite: (Movie) -> Unit
+    onToggleFavourite: (Movie) -> Unit,
+    onMovieClick: (Movie) -> Unit
 ) {
-    var query by remember { mutableStateOf("") }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -34,11 +34,8 @@ fun MovieScreen(
         )
 
         OutlinedTextField(
-            value = query,
-            onValueChange = {
-                query = it
-                onSearch(it)
-            },
+            value = searchQuery,
+            onValueChange = { onSearch(it) },
             label = { Text("Search") },
             modifier = Modifier.fillMaxWidth()
         )
@@ -47,17 +44,28 @@ fun MovieScreen(
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             itemsIndexed(movieList) { index, movie ->
-                MovieRow(movie = movie, index = index, onToggleFavourite = { onToggleFavourite(it) })
+                MovieRow(
+                    movie              = movie,
+                    index              = index,
+                    onToggleFavourite  = onToggleFavourite,
+                    onClick            = onMovieClick
+                )
             }
         }
     }
 }
 
 @Composable
-fun MovieRow(movie: Movie, index: Int, onToggleFavourite: (Movie) -> Unit) {
+fun MovieRow(
+    movie: Movie,
+    index: Int,
+    onToggleFavourite: (Movie) -> Unit,
+    onClick: (Movie) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { onClick(movie) }
             .padding(vertical = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -67,10 +75,10 @@ fun MovieRow(movie: Movie, index: Int, onToggleFavourite: (Movie) -> Unit) {
         )
 
         Icon(
-            imageVector = if (movie.isFavourite) Icons.Filled.Star else Icons.Outlined.Star,
+            imageVector   = if (movie.isFavourite) Icons.Filled.Star else Icons.Outlined.Star,
             contentDescription = "Favourite Icon",
-            tint = if (movie.isFavourite) Color.Magenta else Color.Gray,
-            modifier = Modifier
+            tint          = if (movie.isFavourite) Color.Magenta else Color.Gray,
+            modifier      = Modifier
                 .size(24.dp)
                 .clickable { onToggleFavourite(movie) }
         )
