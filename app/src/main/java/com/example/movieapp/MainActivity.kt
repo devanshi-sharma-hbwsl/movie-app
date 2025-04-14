@@ -18,7 +18,6 @@ import com.example.movieapp.featureA.presentation.ui.FavouritesScreen
 import com.example.movieapp.featureA.presentation.ui.MovieDetailScreen
 import com.example.movieapp.featureA.presentation.ui.MovieScreen
 import com.example.movieapp.featureA.presentation.viewmodel.MovieViewModel
-import com.example.movieapp.featureA.presentation.viewmodel.MovieViewModelFactory
 import com.example.movieapp.ui.theme.MovieAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
