@@ -16,7 +16,7 @@ import com.example.movieapp.featureA.domain.model.Movie
 fun FavouritesScreen(
     favouriteList: List<Movie>,
     onToggleFavourite: (Movie) -> Unit,
-    onMovieClick: (Movie) -> Unit,   // ← new
+    onMovieClick: (Movie) -> Unit,
     onBack: () -> Unit
 ) {
     Scaffold(
@@ -42,12 +42,11 @@ fun FavouritesScreen(
             } else {
                 LazyColumn {
                     itemsIndexed(favouriteList) { index, movie ->
-                        // Use your existing MovieRow, passing onClick = onMovieClick
                         MovieRow(
                             movie             = movie,
                             index             = index,
                             onToggleFavourite = onToggleFavourite,
-                            onClick           = onMovieClick  // ← wire it here
+                            onClick           = onMovieClick
                         )
                     }
                 }

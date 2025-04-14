@@ -4,8 +4,9 @@ import android.util.Log
 import com.example.movieapp.featureA.data.api.RetrofitInstance
 import com.example.movieapp.featureA.domain.model.Movie
 import com.example.movieapp.featureA.domain.repository.FetchMovieRepo
+import javax.inject.Inject
 
-class FetchMovieRepoImpl : FetchMovieRepo {
+class FetchMovieRepoImpl @Inject constructor() : FetchMovieRepo {
     override suspend fun getMovies(): List<Movie> {
         val temp2 = RetrofitInstance.api.getAPIMovies()
 

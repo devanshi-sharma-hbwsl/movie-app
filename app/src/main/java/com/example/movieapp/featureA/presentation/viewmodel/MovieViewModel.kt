@@ -12,8 +12,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MovieViewModel(
+@HiltViewModel
+class MovieViewModel @Inject constructor(
     private val fetchMovieRepo: FetchMovieRepo
 ) : ViewModel() {
 
